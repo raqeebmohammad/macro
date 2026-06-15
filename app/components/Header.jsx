@@ -44,8 +44,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
       <header className={`header ${isHome ? 'header-home' : ''}`}>
         <div className="header-top-row">
           <NavLink prefetch="intent" to="/" className="header-logo" end style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: 1.1, gap: '4px'}}>
-            <span style={{letterSpacing: '0.15em', fontSize: '1.2rem', fontWeight: 600}}>NICHE TRADING</span>
-            <span style={{fontSize: '0.85rem', fontWeight: 400, letterSpacing: '0.05em'}}>نيش للتجارة</span>
+            <span style={{letterSpacing: '0.15em', fontSize: '1.2rem', fontWeight: 600}}>MAHROO</span>
           </NavLink>
 
           <div style={{display: 'flex', flex: 1, justifyContent: 'center'}}>
