@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {Link, useParams, useNavigate} from 'react-router';
+import {Link, useParams, useNavigate, useSearchParams} from 'react-router';
 import {PRODUCTS, CATEGORIES, getProductsByCategory} from '~/data/products';
 
 export const meta = () => {
@@ -46,7 +46,13 @@ export default function AllProducts() {
     setActiveCategory(handle && handle !== 'all' ? handle : 'all');
   }, [handle]);
 
-  const filteredProducts = getProductsByCategory(activeCategory);
+  const [searchParams] = useSearchParams();
+  const brandParam = searchParams.get('brand');
+
+  let filteredProducts = getProductsByCategory(activeCategory);
+  if (brandParam) {
+    filteredProducts = filteredProducts.filter(p => p.brand?.toLowerCase() === brandParam.toLowerCase());
+  }
 
   const addToCart = (product) => {
     setCartNotification(product.title);
@@ -199,7 +205,7 @@ export default function AllProducts() {
       }}>
         <p style={{fontSize: '0.75rem', color: 'var(--muted)'}}>
           Showing {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''}
-          {activeCategory !== 'all' && ` in ${CATEGORIES.find(c => c.id === activeCategory)?.label}`}
+          {activeCategory !== 'all' && ` in ${CATEGORIES.find(c => c.id === activeCategory)?.title || activeCategory.replace('-', ' ')}`}
         </p>
       </div>
 

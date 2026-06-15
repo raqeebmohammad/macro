@@ -3,6 +3,7 @@ import {getPaginationVariables, Analytics, Money} from '@shopify/hydrogen';
 import {SearchForm} from '~/components/SearchForm';
 import {SearchResults} from '~/components/SearchResults';
 import {getEmptyPredictiveSearchResult} from '~/lib/search';
+import {PRODUCTS} from '~/data/products';
 
 /**
  * @type {Route.MetaFunction}
@@ -562,30 +563,41 @@ export const SEARCH_QUERY = `#graphql
  * @return {Promise<RegularSearchReturn>}
  */
 async function regularSearch({request, context}) {
-  const {storefront} = context;
   const url = new URL(request.url);
-  const variables = getPaginationVariables(request, {pageBy: 8});
-  const term = String(url.searchParams.get('q') || '');
+  const term = String(url.searchParams.get('q') || '').trim().toLowerCase();
 
-  // Search articles, pages, and products for the `q` term
-  const {errors, ...items} = await storefront.query(SEARCH_QUERY, {
-    variables: {...variables, term},
-  });
-
-  if (!items) {
-    throw new Error('No search data returned from Shopify API');
+  if (!term) {
+    return {type: 'regular', term, result: {total: 0, items: {products: {nodes: []}, pages: {nodes: []}, articles: {nodes: []}}}};
   }
 
-  const total = Object.values(items).reduce(
-    (acc, {nodes}) => acc + nodes.length,
-    0,
+  // Mock search against PRODUCTS array
+  const matchedProducts = PRODUCTS.filter(p => 
+    p.title.toLowerCase().includes(term) || 
+    p.brand?.toLowerCase().includes(term) ||
+    p.description?.toLowerCase().includes(term) ||
+    p.tags?.some(tag => tag.toLowerCase().includes(term))
   );
 
-  const error = errors
-    ? errors.map(({message}) => message).join(', ')
-    : undefined;
+  // Map to the shape expected by the UI
+  const nodes = matchedProducts.map(p => ({
+    __typename: 'Product',
+    id: p.id,
+    handle: p.handle,
+    title: p.title,
+    vendor: p.brand,
+    selectedOrFirstAvailableVariant: {
+      image: p.image ? { url: p.image, altText: p.title, width: 600, height: 600 } : null,
+      price: { amount: String(p.priceNum || 0), currencyCode: 'QAR' }
+    }
+  }));
 
-  return {type: 'regular', term, error, result: {total, items}};
+  const items = {
+    products: { nodes },
+    pages: { nodes: [] },
+    articles: { nodes: [] }
+  };
+
+  return {type: 'regular', term, result: {total: nodes.length, items}};
 }
 
 /**
@@ -722,41 +734,39 @@ const PREDICTIVE_SEARCH_QUERY = `#graphql
  * @return {Promise<PredictiveSearchReturn>}
  */
 async function predictiveSearch({request, context}) {
-  const {storefront} = context;
   const url = new URL(request.url);
-  const term = String(url.searchParams.get('q') || '').trim();
+  const term = String(url.searchParams.get('q') || '').trim().toLowerCase();
   const limit = Number(url.searchParams.get('limit') || 10);
   const type = 'predictive';
 
   if (!term) return {type, term, result: getEmptyPredictiveSearchResult()};
 
-  // Predictively search articles, collections, pages, products, and queries (suggestions)
-  const {predictiveSearch: items, errors} = await storefront.query(
-    PREDICTIVE_SEARCH_QUERY,
-    {
-      variables: {
-        // customize search options as needed
-        limit,
-        limitScope: 'EACH',
-        term,
-      },
-    },
-  );
+  // Mock predictive search
+  const matchedProducts = PRODUCTS.filter(p => 
+    p.title.toLowerCase().includes(term) || 
+    p.brand?.toLowerCase().includes(term)
+  ).slice(0, limit);
 
-  if (errors) {
-    throw new Error(
-      `Shopify API errors: ${errors.map(({message}) => message).join(', ')}`,
-    );
-  }
+  const productsNodes = matchedProducts.map(p => ({
+    __typename: 'Product',
+    id: p.id,
+    handle: p.handle,
+    title: p.title,
+    selectedOrFirstAvailableVariant: {
+      image: p.image ? { url: p.image, altText: p.title, width: 600, height: 600 } : null,
+      price: { amount: String(p.priceNum || 0), currencyCode: 'QAR' }
+    }
+  }));
 
-  if (!items) {
-    throw new Error('No predictive search data returned from Shopify API');
-  }
+  const items = {
+    products: productsNodes,
+    articles: [],
+    collections: [],
+    pages: [],
+    queries: []
+  };
 
-  const total = Object.values(items).reduce(
-    (acc, item) => acc + item.length,
-    0,
-  );
+  const total = productsNodes.length;
 
   return {type, term, result: {items, total}};
 }

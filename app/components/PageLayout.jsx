@@ -60,22 +60,35 @@ function SearchAside() {
   return (
     <Aside type="search" heading="SEARCH">
       <div className="predictive-search">
-        <br />
         <SearchFormPredictive>
           {({fetchResults, goToSearch, inputRef}) => (
-            <>
+            <div style={{display: 'flex', gap: '0.5rem', marginBottom: '2rem'}}>
               <input
                 name="q"
                 onChange={fetchResults}
                 onFocus={fetchResults}
-                placeholder="Search"
+                placeholder="Search products, brands..."
                 ref={inputRef}
                 type="search"
                 list={queriesDatalistId}
+                style={{
+                  flex: 1, padding: '0.75rem 1rem', background: '#FAFAFA',
+                  border: '1px solid var(--border)', outline: 'none',
+                  fontFamily: 'Inter, sans-serif', fontSize: '0.9rem'
+                }}
               />
-              &nbsp;
-              <button onClick={goToSearch}>Search</button>
-            </>
+              <button 
+                onClick={goToSearch}
+                style={{
+                  background: 'var(--gold)', color: 'var(--black)',
+                  border: 'none', padding: '0 1.5rem', cursor: 'pointer',
+                  fontFamily: 'Inter, sans-serif', fontSize: '0.75rem',
+                  fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase'
+                }}
+              >
+                Search
+              </button>
+            </div>
           )}
         </SearchFormPredictive>
 

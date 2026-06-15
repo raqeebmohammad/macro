@@ -4,6 +4,8 @@ import {Await, NavLink, useAsyncValue} from 'react-router';
 import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
 import {useCart} from '~/context/CartContext';
+import {SearchFormPredictive} from '~/components/SearchFormPredictive';
+import {useFetcher, useNavigate} from 'react-router';
 
 /**
  * @param {HeaderProps}
@@ -25,24 +27,106 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
   return (
     <header className="header">
-      {/* Desktop Nav (Left) */}
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-        publicStoreDomain={publicStoreDomain}
-      />
+      <div className="header-top-row">
+        <div className="header-left-ctas">
+          <button 
+            className="header-icon-btn reset" 
+            onClick={() => setIsSearchOpen(!isSearchOpen)} 
+            aria-label="Search"
+            style={{color: isSearchOpen ? 'var(--gold)' : 'inherit'}}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+          </button>
+          <HeaderMenuMobileToggle />
+        </div>
+        <NavLink prefetch="intent" to="/" className="header-logo" end>
+          MAHROO
+        </NavLink>
+        <div className="header-right-ctas">
+          <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+        </div>
+      </div>
+      
+      <div className="header-bottom-row">
+        <HeaderMenu
+          menu={menu}
+          viewport="desktop"
+          primaryDomainUrl={header.shop.primaryDomain.url}
+          publicStoreDomain={publicStoreDomain}
+        />
+      </div>
 
-      {/* Centered Logo */}
-      <NavLink prefetch="intent" to="/" className="header-logo" style={{textAlign: 'center'}} end>
-        MAHROO
-      </NavLink>
-
-      {/* CTAs (Right) */}
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      {isSearchOpen && <HeaderSearchDropdown close={() => setIsSearchOpen(false)} />}
     </header>
+  );
+}
+
+function HeaderSearchDropdown({close}) {
+  const navigate = useNavigate();
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    // Focus the input immediately when the dropdown opens
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (inputRef.current?.value) {
+      navigate(`/search?q=${inputRef.current.value}`);
+      close();
+    }
+  };
+
+  return (
+    <div className="header-search-dropdown" style={{
+      position: 'absolute', top: 'var(--header-height)', left: '0', 
+      width: '100%', background: '#FFFFFF', padding: '2.5rem 2rem',
+      borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)',
+      boxShadow: '0 20px 40px rgba(0,0,0,0.08)', zIndex: 1000
+    }}>
+      <div style={{maxWidth: '800px', margin: '0 auto', position: 'relative'}}>
+        <form onSubmit={handleSearch} style={{display: 'flex', alignItems: 'center'}}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" style={{position: 'absolute', left: '1rem'}}>
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input 
+            ref={inputRef}
+            type="search" 
+            placeholder="Search for premium skincare, brands, or rituals..."
+            style={{
+              width: '100%', padding: '1rem 1rem 1rem 3.5rem', 
+              fontSize: '1.2rem', fontFamily: 'Playfair Display, serif',
+              color: 'var(--black)', border: 'none', background: '#FAFAFA',
+              borderRadius: '4px', outline: 'none'
+            }}
+          />
+          <button type="submit" className="btn-gold" style={{marginLeft: '1rem', padding: '1rem 2.5rem'}}>
+            Search
+          </button>
+        </form>
+        <div style={{display: 'flex', gap: '1rem', marginTop: '1.5rem', marginLeft: '3.5rem'}}>
+          <span style={{fontSize: '0.7rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em'}}>Trending:</span>
+          {['Tsubaki', 'Face Cleanser', 'Body Scrub', 'Melano CC'].map(term => (
+            <button key={term} onClick={() => { if(inputRef.current) inputRef.current.value = term; handleSearch({preventDefault: () => {}}); }} style={{
+              background: 'none', border: 'none', padding: 0, 
+              fontSize: '0.8rem', color: 'var(--black)', cursor: 'pointer',
+              textDecoration: 'underline', textDecorationColor: 'var(--gold)'
+            }}>
+              {term}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -53,60 +137,37 @@ const getMenuImg = (keyword) => {
 };
 
 const MEGAMENU_DATA = {
+  'BRANDS': {
+    promoImage: getMenuImg('skincare'), promoTitle: 'Discover Tsubaki', promoLink: '/collections/all?brand=Tsubaki',
+    links: [ { title: 'FWEE', url: '/collections/all?brand=FWEE' }, { title: 'Tsubaki', url: '/collections/all?brand=Tsubaki' }, { title: 'Marvis', url: '/collections/all?brand=Marvis' }, { title: 'Milba Lab', url: '/collections/all?brand=Milba Lab' }, { title: 'Melano CC', url: '/collections/all?brand=Melano CC' }, { title: 'Sakura', url: '/collections/all?brand=Sakura' } ]
+  },
   'SKINCARE': {
-    promoImage: getMenuImg('skincare'),
-    promoTitle: 'Complete Skincare',
-    promoLink: '/collections/skincare',
-    links: [
-      { title: 'Cleansers & Toners', url: '/collections/skincare' },
-      { title: 'Serums & Treatments', url: '/collections/skincare' },
-      { title: 'Moisturizers', url: '/collections/skincare' },
-      { title: 'Sunscreens', url: '/collections/skincare' }
-    ]
+    promoImage: getMenuImg('skincare'), promoTitle: 'Korean Rituals', promoLink: '/collections/skincare',
+    links: [ { title: 'Cleansers & Toners', url: '/collections/face-cleanser' }, { title: 'Moisturizers & Creams', url: '/collections/cream' }, { title: 'Sheet Masks', url: '/collections/face-mask' }, { title: 'All Skincare', url: '/collections/skincare' } ]
   },
   'HAIR CARE': {
-    promoImage: getMenuImg('hair-care'),
-    promoTitle: 'Advanced Hair Care',
-    promoLink: '/collections/hair-care',
-    links: [
-      { title: 'Shampoos & Conditioners', url: '/collections/hair-care' },
-      { title: 'Hair Masks', url: '/collections/hair-care' },
-      { title: 'Oils & Serums', url: '/collections/hair-care' },
-      { title: 'Styling Products', url: '/collections/hair-care' }
-    ]
+    promoImage: getMenuImg('hair-care'), promoTitle: 'Premium Haircare', promoLink: '/collections/hair-care',
+    links: [ { title: 'Shampoos', url: '/collections/shampoo' }, { title: 'Hair Color', url: '/collections/hair-color' }, { title: 'All Haircare', url: '/collections/hair-care' } ]
   },
   'BATH & BODY': {
-    promoImage: getMenuImg('bath-body'),
-    promoTitle: 'Body Rituals',
-    promoLink: '/collections/bath-body',
-    links: [
-      { title: 'Body Wash', url: '/collections/bath-body' },
-      { title: 'Lotions & Creams', url: '/collections/bath-body' },
-      { title: 'Scrubs & Exfoliants', url: '/collections/bath-body' },
-      { title: 'Deodorants', url: '/collections/bath-body' }
-    ]
+    promoImage: getMenuImg('bath-body'), promoTitle: 'Body Rituals', promoLink: '/collections/bath-body',
+    links: [ { title: 'Body Care', url: '/collections/body-care' }, { title: 'Bath & Body', url: '/collections/bath-body' }, { title: 'Deodorants', url: '/collections/deodorant' }, { title: 'Body Spray', url: '/collections/body-spray' }, { title: 'Foot Care', url: '/collections/foot-care' } ]
   },
   'MAKEUP': {
-    promoImage: getMenuImg('makeup'),
-    promoTitle: 'Flawless Finish',
-    promoLink: '/collections/makeup',
-    links: [
-      { title: 'Face Makeup', url: '/collections/makeup' },
-      { title: 'Eye Makeup', url: '/collections/makeup' },
-      { title: 'Lip Products', url: '/collections/makeup' },
-      { title: 'Tools & Brushes', url: '/collections/makeup' }
-    ]
+    promoImage: getMenuImg('makeup'), promoTitle: 'Flawless Finish', promoLink: '/collections/makeup',
+    links: [ { title: 'Face & Eyes', url: '/collections/makeup' }, { title: 'Lip Products', url: '/collections/lip-product' }, { title: 'Beauty Tools', url: '/collections/beauty-tools' } ]
   },
-  'MORE': {
-    promoImage: getMenuImg('fragrance'),
-    promoTitle: 'Discover More',
-    promoLink: '/collections/all',
-    links: [
-      { title: 'Food & Beverage', url: '/collections/food-beverage' },
-      { title: 'Feminine Care', url: '/collections/feminine-care' },
-      { title: 'Fragrance', url: '/collections/fragrance' },
-      { title: 'Baby Care', url: '/collections/baby-care' }
-    ]
+  'FRAGRANCE': {
+    promoImage: getMenuImg('fragrance'), promoTitle: 'Signature Scents', promoLink: '/collections/fragrance',
+    links: [ { title: 'Perfumes & Fragrance', url: '/collections/fragrance' }, { title: 'Body Spray', url: '/collections/body-spray' } ]
+  },
+  'MEN': {
+    promoImage: getMenuImg('hair-care'), promoTitle: 'Men\'s Grooming', promoLink: '/collections/deodorant-body-spray-for-men',
+    links: [ { title: 'Deodorant Body Spray', url: '/collections/deodorant-body-spray-for-men' } ]
+  },
+  'GIFTS': {
+    promoImage: getMenuImg('bath-body'), promoTitle: 'The Perfect Gift', promoLink: '/collections/oral-care',
+    links: [ { title: 'Oral Care Gifts', url: '/collections/oral-care' }, { title: 'Baby Care', url: '/collections/baby-care' }, { title: 'Home Care', url: '/collections/home-care' }, { title: 'Pet Care', url: '/collections/pet-care' } ]
   }
 };
 
@@ -131,18 +192,27 @@ export function HeaderMenu({menu, viewport, publicStoreDomain, primaryDomainUrl}
     if (isDesktop) setActiveMenu(null);
   };
 
-  const navItems = ['SKINCARE', 'HAIR CARE', 'BATH & BODY', 'MAKEUP', 'MORE'];
+  const navItems = [
+    { title: 'BRANDS', url: '/collections/all' },
+    { title: 'SKINCARE', url: '/collections/skincare' },
+    { title: 'HAIR CARE', url: '/collections/hair-care' },
+    { title: 'BATH & BODY', url: '/collections/bath-body' },
+    { title: 'MAKEUP', url: '/collections/makeup' },
+    { title: 'FRAGRANCE', url: '/collections/fragrance' },
+    { title: 'MEN', url: '/collections/all' },
+    { title: 'GIFTS', url: '/collections/all' }
+  ];
 
   return (
     <nav className={className} role="navigation" onMouseLeave={handleMouseLeave}>
       {navItems.map((item) => (
         <MegaMenuNode 
-          key={item} 
-          item={{title: item, url: `/collections/${item.toLowerCase().replace(' & ', '-').replace(' ', '-')}`}}
-          isOpen={activeMenu === item}
-          onMouseEnter={() => handleMouseEnter(item)}
-          onFocus={() => handleMouseEnter(item)}
-          megaData={MEGAMENU_DATA[item]}
+          key={item.title} 
+          item={item}
+          isOpen={activeMenu === item.title}
+          onMouseEnter={() => handleMouseEnter(item.title)}
+          onFocus={() => handleMouseEnter(item.title)}
+          megaData={MEGAMENU_DATA[item.title]}
         />
       ))}
     </nav>
@@ -204,7 +274,7 @@ function MegaMenuNode({item, url, megaData, closeAside}) {
         onClick={handleLinkClick}
         prefetch="intent"
         style={activeLinkStyle}
-        to={url}
+        to={item.url}
         aria-expanded={isOpen}
       >
         {item.title}
@@ -251,7 +321,6 @@ function MegaMenuNode({item, url, megaData, closeAside}) {
 function HeaderCtas({isLoggedIn, cart}) {
   return (
     <nav className="header-ctas" role="navigation">
-      <SearchToggle />
       <NavLink
         prefetch="intent"
         to="/account"
@@ -265,7 +334,6 @@ function HeaderCtas({isLoggedIn, cart}) {
         </Suspense>
       </NavLink>
       <CartToggle cart={cart} />
-      <HeaderMenuMobileToggle />
     </nav>
   );
 }
@@ -287,16 +355,7 @@ function HeaderMenuMobileToggle() {
   );
 }
 
-function SearchToggle() {
-  const {open} = useAside();
-  return (
-    <button className="header-icon-btn reset" onClick={() => open('search')} aria-label="Search">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-      </svg>
-    </button>
-  );
-}
+// SearchToggle removed in favor of inline header search
 
 /**
  * @param {{count: number}}

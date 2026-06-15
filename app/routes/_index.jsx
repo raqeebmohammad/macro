@@ -86,114 +86,28 @@ export default function Homepage() {
 }
 
 /* ── Hero ──────────────────────────────────────────────── */
-const HERO_SLIDES = PRODUCTS.slice(0, 6).map(p => ({
-  image: p.image,
-  label: p.collections && p.collections[1] ? p.collections[1].toUpperCase().replace('-', ' ') : 'NEW ARRIVALS',
-  subtitle: p.title,
-  link: '/products/' + p.handle
-}));
-
 function HeroSection() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const goToProduct = () => {
-    window.location.href = HERO_SLIDES[currentSlide].link;
-  };
+  const bannerImg = "/korean_beauty_banner.png";
 
   return (
     <div
       style={{
-        position: 'relative', height: '60vh', minHeight: '450px', maxHeight: '700px',
-        overflow: 'hidden', background: '#000', cursor: 'pointer', zIndex: 200,
+        position: 'relative', width: '100%', minHeight: '250px', maxHeight: '380px',
+        overflow: 'hidden', background: '#f5f5f5', cursor: 'pointer', zIndex: 200,
+        display: 'block'
       }}
-      onClick={goToProduct}
+      onClick={() => { window.location.href = '/collections/all'; }}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => { if (e.key === 'Enter') goToProduct(); }}
-      aria-label={`Shop ${HERO_SLIDES[currentSlide].subtitle}`}
+      onKeyDown={(e) => { if (e.key === 'Enter') window.location.href = '/collections/all'; }}
+      aria-label="Shop K-Beauty Collection"
     >
-      {HERO_SLIDES.map((slide, index) => {
-        const isActive = index === currentSlide;
-        return (
-          <div
-            key={index}
-            style={{
-              position: 'absolute', inset: 0,
-              opacity: isActive ? 1 : 0,
-              transition: 'opacity 1.2s ease',
-              pointerEvents: 'none',
-            }}
-          >
-            <img
-              src={slide.image}
-              alt={slide.subtitle}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-              loading={index === 0 ? 'eager' : 'lazy'}
-            />
-            {/* Dark gradient overlay */}
-            <div style={{
-              position: 'absolute', inset: 0,
-              background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.55) 100%)',
-            }} />
-            {/* Text on top */}
-            <div style={{
-              position: 'absolute', inset: 0,
-              display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center',
-              padding: '2rem',
-            }}>
-              <span style={{
-                fontFamily: 'Inter, sans-serif', fontSize: '0.7rem', fontWeight: '700',
-                letterSpacing: '0.4em', textTransform: 'uppercase',
-                color: '#C9A96E', marginBottom: '1rem',
-                background: 'rgba(0,0,0,0.5)', padding: '0.35rem 1.25rem', borderRadius: '100px',
-              }}>{slide.label}</span>
-              <h2 style={{
-                fontFamily: '"Playfair Display", serif',
-                fontSize: 'clamp(1.8rem, 5vw, 3.5rem)',
-                color: '#fff', textAlign: 'center',
-                margin: '0 0 1.5rem', lineHeight: 1.2,
-                textShadow: '0 2px 16px rgba(0,0,0,0.6)',
-              }}>{slide.subtitle}</h2>
-              <span style={{
-                fontFamily: 'Inter, sans-serif', fontSize: '0.8rem', fontWeight: '600',
-                letterSpacing: '0.2em', textTransform: 'uppercase',
-                color: '#fff', border: '1px solid rgba(255,255,255,0.9)',
-                padding: '0.7rem 2rem', borderRadius: '100px',
-                background: 'rgba(201,169,110,0.3)',
-              }}>Shop Now →</span>
-            </div>
-          </div>
-        );
-      })}
-
-      {/* Dot indicators */}
-      <div style={{
-        position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)',
-        display: 'flex', gap: '0.5rem', zIndex: 10,
-      }}>
-        {HERO_SLIDES.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={(e) => { e.stopPropagation(); setCurrentSlide(idx); }}
-            aria-label={`Slide ${idx + 1}`}
-            style={{
-              width: idx === currentSlide ? '2rem' : '0.5rem',
-              height: '0.5rem', borderRadius: '100px',
-              background: idx === currentSlide ? '#C9A96E' : 'rgba(255,255,255,0.5)',
-              border: 'none', cursor: 'pointer', padding: 0,
-              transition: 'all 0.3s ease',
-            }}
-          />
-        ))}
-      </div>
+      <img
+        src={bannerImg}
+        alt="Premium K-Beauty"
+        style={{ width: '100%', height: '380px', objectFit: 'cover', display: 'block', objectPosition: 'center 40%' }}
+        loading="eager"
+      />
     </div>
   );
 }
@@ -320,7 +234,11 @@ function FeaturedSpotlight() {
 
 /* ── Bestsellers ────────────────────────────────────────── */
 function BestsellersSection() {
-  const bestsellers = PRODUCTS.filter(p => p.badge === 'Bestseller' || p.rating >= 4.8).slice(0, 8);
+  const bestsellers = PRODUCTS.filter(p => 
+    (p.badge === 'Bestseller' || p.rating >= 4.8) && 
+    p.image && 
+    !p.image.includes('placehold')
+  ).slice(0, 8);
 
   const scrollRef = useScrollAnimation();
 
