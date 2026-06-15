@@ -223,7 +223,10 @@ function BestsellersSection() {
   const bestsellers = PRODUCTS.filter(p => 
     (p.badge === 'Bestseller' || p.rating >= 4.8) && 
     p.image && 
-    !p.image.includes('placehold')
+    p.image.trim() !== '' &&
+    !p.image.includes('placehold') &&
+    !p.image.toLowerCase().includes('no-image') &&
+    !p.image.toLowerCase().includes('no+image')
   ).slice(0, 8);
 
   const scrollRef = useScrollAnimation();
