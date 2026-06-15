@@ -243,7 +243,8 @@ button.reset:hover:not(:has(> *)) { text-decoration: underline; cursor: pointer;
 
 .header-home:not(.scrolled) {
   position: absolute;
-  top: auto;
+  top: 65px; /* Pushes the header down below the announcement bars */
+  padding-top: 10px; /* Gives the logo some breathing room from the marquee */
   background: transparent;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
