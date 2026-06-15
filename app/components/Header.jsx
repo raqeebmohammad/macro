@@ -5,13 +5,15 @@ import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
 import {useCart} from '~/context/CartContext';
 import {SearchFormPredictive} from '~/components/SearchFormPredictive';
-import {useFetcher, useNavigate} from 'react-router';
+import {useFetcher, useNavigate, useLocation} from 'react-router';
 
 /**
  * @param {HeaderProps}
  */
 export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
   const {shop, menu} = header;
+  const location = useLocation();
+  const isHome = location.pathname === '/';
 
   // Scroll effect: add 'scrolled' class to header when user scrolls down
   useEffect(() => {
@@ -30,8 +32,17 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
-    <header className="header">
-      <div className="header-top-row">
+    <>
+      <div className="announcement-bar-top" style={{ background: '#000', color: 'var(--gold)', padding: '8px 15px', textAlign: 'center', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.05em' }}>
+        <span>✦ AUTHORIZED AGENT IN QATAR | Marvis · Fino · Tsubaki · Eqqualberry · Chap-Stick · BOJ | <a href="/pages/authenticity" style={{textDecoration: 'underline'}}>Verify authenticity →</a></span>
+      </div>
+      <div className="announcement-bar-bottom" style={{ background: '#111', color: '#fff', padding: '6px 15px', textAlign: 'center', fontSize: '0.7rem', fontWeight: 400, letterSpacing: '0.05em', borderBottom: '1px solid #333' }}>
+        <marquee scrollamount="4" style={{ display: 'block', width: '100%' }}>
+          🌿 Healthy skin starts here. • Premium ingredients for your hair and body care • Trusted by beauty experts • Your favorite wellness and beauty brands delivered straight to your door • 🌿 Healthy skin starts here.
+        </marquee>
+      </div>
+      <header className={`header ${isHome ? 'header-home' : ''}`}>
+        <div className="header-top-row">
         <div className="header-left-ctas">
           <button 
             className="header-icon-btn reset" 
@@ -65,6 +76,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
 
       {isSearchOpen && <HeaderSearchDropdown close={() => setIsSearchOpen(false)} />}
     </header>
+    </>
   );
 }
 

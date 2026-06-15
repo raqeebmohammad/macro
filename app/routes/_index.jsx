@@ -92,8 +92,8 @@ function HeroSection() {
   return (
     <div
       style={{
-        position: 'relative', width: '100%', minHeight: '250px', maxHeight: '380px',
-        overflow: 'hidden', background: '#f5f5f5', cursor: 'pointer', zIndex: 200,
+        position: 'relative', width: '100%', height: '85vh',
+        overflow: 'hidden', background: '#000', cursor: 'pointer', zIndex: 200,
         display: 'block'
       }}
       onClick={() => { window.location.href = '/collections/all'; }}
@@ -105,7 +105,7 @@ function HeroSection() {
       <img
         src={bannerImg}
         alt="Premium K-Beauty"
-        style={{ width: '100%', height: '380px', objectFit: 'cover', display: 'block', objectPosition: 'center 15%' }}
+        style={{ width: '100%', height: '85vh', objectFit: 'cover', display: 'block', objectPosition: 'center 15%' }}
         loading="eager"
       />
     </div>
@@ -114,23 +114,11 @@ function HeroSection() {
 
 /* ── Marquee ───────────────────────────────────────────── */
 function MarqueeBanner() {
-  // Real brands from Niche Trading
-  const brands = [
-    'ANUA', 'BEAUTY OF JOSEON', 'CANTU', 'MEDICUBE', 'THE ORDINARY',
-    'TIRTIR', 'NATURA SIBERICA', 'MIXSOON', 'SKIN1004', 'MARVIS',
-    'TSUBAKI', 'ORGANIC SHOP', 'MILK BAOBAB', 'FWEE', 'URBAN CARE',
-    'ANUA', 'BEAUTY OF JOSEON', 'CANTU', 'MEDICUBE', 'THE ORDINARY',
-  ];
   return (
-    <div className="marquee-section" aria-label="Featured brands">
-      <div className="marquee-track">
-        {brands.map((brand, i) => (
-          <span key={i} className="marquee-item">
-            {brand}
-            <span className="marquee-dot" />
-          </span>
-        ))}
-      </div>
+    <div style={{ background: '#fff', color: '#000', padding: '12px 0', borderBottom: '1px solid #eaeaea', fontSize: '0.9rem', fontWeight: 600, letterSpacing: '0.05em' }}>
+      <marquee scrollamount="5" style={{ display: 'block', width: '100%' }}>
+        Beauty & Wellness You Can Trust | Niche Trading (Qatar) | Al Rayyan Trade (Saudi Arabia) | جمال وعافية يمكنك الوثوق بها | نيش تريدنج (قطر) | الريان تريد (السعودية) • Beauty & Wellness You Can Trust | Niche Trading (Qatar) | Al Rayyan Trade (Saudi Arabia) | جمال وعافية يمكنك الوثوق بها | نيش تريدنج (قطر) | الريان تريد (السعودية)
+      </marquee>
     </div>
   );
 }
