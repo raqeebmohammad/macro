@@ -1102,7 +1102,7 @@ aside.aside-search {
    COLLECTIONS GRID (Home)
    ============================================================ */
 .home-collections {
-  padding: 2rem 2.5rem 6rem;
+  padding: 0.5rem 2.5rem 6rem;
   background: var(--pastel-pink);
 }
 

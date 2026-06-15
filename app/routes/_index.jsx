@@ -61,7 +61,10 @@ export default function Homepage() {
       {/* Hero Section */}
       <HeroSection />
 
-      {/* Collections Grid — Shows right below the 60vh banner */}
+      {/* Marquee Translation Strip */}
+      <MarqueeBanner />
+
+      {/* Collections Grid — Shows right below the banner */}
       <CollectionsSection collection={data.featuredCollection} />
 
       {/* Bestsellers — Ready to Shop */}
@@ -108,6 +111,15 @@ function HeroSection() {
     </div>
   );
 }
+
+/* ── Marquee Translation Strip ───────────────────────────── */
+function MarqueeBanner() {
+  return (
+    <div style={{ background: 'var(--pastel-pink)', color: 'var(--black-soft)', paddingTop: '2rem', paddingBottom: '0.5rem', paddingLeft: '2rem', paddingRight: '2rem', textAlign: 'center', fontSize: '0.85rem', fontWeight: 400, letterSpacing: '0.05em', lineHeight: 1.6 }} dir="rtl">
+      🌿 تبدأ البشرة الصحية من هنا. • مكونات ممتازة للعناية بشعرك وجسمك • موثوق بها من قبل خبراء التجميل • منتجات العافية والجمال المفضلة لديك تصلك مباشرة إلى باب منزلك • 🌿 تبدأ البشرة الصحية من هنا.
+    </div>
+  );
+}
 /* ── Collections Grid ──────────────────────────────────── */
 // Dynamically get an image for each category
 
@@ -126,9 +138,6 @@ function CollectionsSection({collection}) {
   return (
     <section className="home-collections" aria-labelledby="collections-heading">
       <div className="section-header">
-        <p style={{ color: 'var(--black-soft)', fontSize: '0.85rem', marginBottom: '2rem', letterSpacing: '0.05em', lineHeight: 1.6 }} dir="rtl">
-          🌿 تبدأ البشرة الصحية من هنا. • مكونات ممتازة للعناية بشعرك وجسمك • موثوق بها من قبل خبراء التجميل • منتجات العافية والجمال المفضلة لديك تصلك مباشرة إلى باب منزلك • 🌿 تبدأ البشرة الصحية من هنا.
-        </p>
         <span className="section-eyebrow">Explore</span>
         <h2 className="section-title" id="collections-heading">Shop by Category</h2>
         <p className="section-subtitle">
