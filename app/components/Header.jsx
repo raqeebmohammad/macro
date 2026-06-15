@@ -162,7 +162,7 @@ const MEGAMENU_DATA = {
   },
   'BATH & BODY': {
     promoImage: getMenuImg('bath-body'), promoTitle: 'Body Rituals', promoLink: '/collections/bath-body',
-    links: [ { title: 'Body Care', url: '/collections/body-care' }, { title: 'Bath & Body', url: '/collections/bath-body' }, { title: 'Deodorants', url: '/collections/deodorant' }, { title: 'Body Spray', url: '/collections/body-spray' }, { title: 'Foot Care', url: '/collections/foot-care' } ]
+    links: [ { title: 'Body Care', url: '/collections/bath-body' }, { title: 'Bath & Body', url: '/collections/bath-body' }, { title: 'Deodorants', url: '/collections/deodorant' }, { title: 'Body Spray', url: '/collections/body-spray' }, { title: 'Foot Care', url: '/collections/foot-care' } ]
   },
   'MAKEUP': {
     promoImage: getMenuImg('makeup'), promoTitle: 'Flawless Finish', promoLink: '/collections/makeup',
