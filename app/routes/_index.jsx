@@ -107,6 +107,7 @@ function HeroSection() {
       />
     </div>
   );
+}
 /* ── Collections Grid ──────────────────────────────────── */
 // Dynamically get an image for each category
 
