@@ -45,8 +45,9 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
           </button>
           <HeaderMenuMobileToggle />
         </div>
-        <NavLink prefetch="intent" to="/" className="header-logo" end>
-          MAHROO
+        <NavLink prefetch="intent" to="/" className="header-logo" end style={{display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.1, gap: '4px'}}>
+          <span style={{letterSpacing: '0.15em', fontSize: '1.2rem', fontWeight: 600}}>NICHE TRADING</span>
+          <span style={{fontSize: '0.85rem', fontWeight: 400, letterSpacing: '0.05em'}}>نيش للتجارة</span>
         </NavLink>
         <div className="header-right-ctas">
           <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />

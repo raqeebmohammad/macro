@@ -105,7 +105,7 @@ function HeroSection() {
       <img
         src={bannerImg}
         alt="Premium K-Beauty"
-        style={{ width: '100%', height: '380px', objectFit: 'cover', display: 'block', objectPosition: 'center 40%' }}
+        style={{ width: '100%', height: '380px', objectFit: 'cover', display: 'block', objectPosition: 'center 15%' }}
         loading="eager"
       />
     </div>
