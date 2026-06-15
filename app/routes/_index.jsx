@@ -116,8 +116,8 @@ function HeroSection() {
 function MarqueeBanner() {
   return (
     <div style={{ background: '#fff', color: '#000', padding: '12px 0', borderBottom: '1px solid #eaeaea', fontSize: '0.9rem', fontWeight: 600, letterSpacing: '0.05em' }}>
-      <marquee scrollamount="5" style={{ display: 'block', width: '100%' }}>
-        Beauty & Wellness You Can Trust | Niche Trading (Qatar) | Al Rayyan Trade (Saudi Arabia) | جمال وعافية يمكنك الوثوق بها | نيش تريدنج (قطر) | الريان تريد (السعودية) • Beauty & Wellness You Can Trust | Niche Trading (Qatar) | Al Rayyan Trade (Saudi Arabia) | جمال وعافية يمكنك الوثوق بها | نيش تريدنج (قطر) | الريان تريد (السعودية)
+      <marquee scrollamount="5" style={{ display: 'block', width: '100%', direction: 'rtl' }}>
+        ✦ الوكيل المعتمد في قطر | Marvis · Fino · Tsubaki · Eqqualberry · Chap-Stick · BOJ | تحقق من الأصالة &larr; &nbsp;&nbsp; 🌿 تبدأ البشرة الصحية من هنا. • مكونات ممتازة للعناية بشعرك وجسمك • موثوق بها من قبل خبراء التجميل • منتجات العافية والجمال المفضلة لديك تصلك مباشرة إلى باب منزلك • 🌿 تبدأ البشرة الصحية من هنا.
       </marquee>
     </div>
   );
