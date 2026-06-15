@@ -43,36 +43,35 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
       </div>
       <header className={`header ${isHome ? 'header-home' : ''}`}>
         <div className="header-top-row">
-        <div className="header-left-ctas">
-          <button 
-            className="header-icon-btn reset" 
-            onClick={() => setIsSearchOpen(!isSearchOpen)} 
-            aria-label="Search"
-            style={{color: isSearchOpen ? 'var(--gold)' : 'inherit'}}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            </svg>
-          </button>
-          <HeaderMenuMobileToggle />
+          <NavLink prefetch="intent" to="/" className="header-logo" end style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: 1.1, gap: '4px'}}>
+            <span style={{letterSpacing: '0.15em', fontSize: '1.2rem', fontWeight: 600}}>NICHE TRADING</span>
+            <span style={{fontSize: '0.85rem', fontWeight: 400, letterSpacing: '0.05em'}}>نيش للتجارة</span>
+          </NavLink>
+
+          <div style={{display: 'flex', flex: 1, justifyContent: 'center'}}>
+            <HeaderMenu
+              menu={menu}
+              viewport="desktop"
+              primaryDomainUrl={header.shop.primaryDomain.url}
+              publicStoreDomain={publicStoreDomain}
+            />
+          </div>
+
+          <div className="header-right-ctas">
+            <button 
+              className="header-icon-btn reset" 
+              onClick={() => setIsSearchOpen(!isSearchOpen)} 
+              aria-label="Search"
+              style={{color: isSearchOpen ? 'var(--gold)' : 'inherit', marginRight: '0.5rem'}}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+            </button>
+            <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+            <HeaderMenuMobileToggle />
+          </div>
         </div>
-        <NavLink prefetch="intent" to="/" className="header-logo" end style={{display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.1, gap: '4px'}}>
-          <span style={{letterSpacing: '0.15em', fontSize: '1.2rem', fontWeight: 600}}>NICHE TRADING</span>
-          <span style={{fontSize: '0.85rem', fontWeight: 400, letterSpacing: '0.05em'}}>نيش للتجارة</span>
-        </NavLink>
-        <div className="header-right-ctas">
-          <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
-        </div>
-      </div>
-      
-      <div className="header-bottom-row">
-        <HeaderMenu
-          menu={menu}
-          viewport="desktop"
-          primaryDomainUrl={header.shop.primaryDomain.url}
-          publicStoreDomain={publicStoreDomain}
-        />
-      </div>
 
       {isSearchOpen && <HeaderSearchDropdown close={() => setIsSearchOpen(false)} />}
     </header>
