@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {Link, useParams} from 'react-router';
 import {getProductByHandle, getRelatedProducts, CATEGORIES} from '~/data/products';
 import {useCart} from '~/context/CartContext';
+import {useAside} from '~/components/Aside';
 
 export const meta = ({data}) => {
   const p = data?.product;
@@ -53,9 +54,11 @@ function ProductDetailView({product, related}) {
   const [mainImage, setMainImage] = useState(product.image);
 
   const {addToCart} = useCart();
+  const {open} = useAside();
 
   const handleAddToCart = () => {
     addToCart(product, qty);
+    open('cart');
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2500);
   };

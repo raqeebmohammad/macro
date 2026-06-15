@@ -610,11 +610,6 @@ export type PolicyQuery = {
   };
 };
 
-export type PolicyItemFragment = Pick<
-  StorefrontAPI.ShopPolicy,
-  'id' | 'title' | 'handle'
->;
-
 export type PoliciesQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
@@ -895,7 +890,7 @@ interface GeneratedQueryTypes {
     return: PolicyQuery;
     variables: PolicyQueryVariables;
   };
-  '#graphql\n  fragment PolicyItem on ShopPolicy {\n    id\n    title\n    handle\n  }\n  query Policies ($country: CountryCode, $language: LanguageCode)\n    @inContext(country: $country, language: $language) {\n    shop {\n      privacyPolicy {\n        ...PolicyItem\n      }\n      shippingPolicy {\n        ...PolicyItem\n      }\n      termsOfService {\n        ...PolicyItem\n      }\n      refundPolicy {\n        ...PolicyItem\n      }\n      subscriptionPolicy {\n        id\n        title\n        handle\n      }\n    }\n  }\n': {
+  '#graphql\n  query Policies ($country: CountryCode, $language: LanguageCode)\n    @inContext(country: $country, language: $language) {\n    shop {\n      privacyPolicy {\n        id\n        title\n        handle\n      }\n      shippingPolicy {\n        id\n        title\n        handle\n      }\n      termsOfService {\n        id\n        title\n        handle\n      }\n      refundPolicy {\n        id\n        title\n        handle\n      }\n      subscriptionPolicy {\n        id\n        title\n        handle\n      }\n    }\n  }\n': {
     return: PoliciesQuery;
     variables: PoliciesQueryVariables;
   };
