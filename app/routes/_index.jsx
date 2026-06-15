@@ -61,14 +61,14 @@ export default function Homepage() {
       {/* Hero Section */}
       <HeroSection />
 
+      {/* Marquee Translation Strip */}
+      <MarqueeBanner />
+
       {/* Collections Grid — Shows right below the 60vh banner */}
       <CollectionsSection collection={data.featuredCollection} />
 
       {/* Bestsellers — Ready to Shop */}
       <BestsellersSection />
-
-      {/* Marquee brand strip */}
-      <MarqueeBanner />
 
       {/* Featured Product Spotlight */}
       <FeaturedSpotlight />
@@ -115,8 +115,8 @@ function HeroSection() {
 /* ── Marquee ───────────────────────────────────────────── */
 function MarqueeBanner() {
   return (
-    <div style={{ background: '#fff', color: '#000', padding: '12px 0', borderBottom: '1px solid #eaeaea', fontSize: '0.9rem', fontWeight: 600, letterSpacing: '0.05em' }}>
-      <marquee scrollamount="5" style={{ display: 'block', width: '100%', direction: 'rtl' }}>
+    <div style={{ background: '#fff', color: '#666', padding: '6px 0', borderBottom: '1px solid #eaeaea', fontSize: '0.75rem', fontWeight: 400, letterSpacing: '0.05em' }}>
+      <marquee scrollamount="4" style={{ display: 'block', width: '100%', direction: 'rtl' }}>
         ✦ الوكيل المعتمد في قطر | Marvis · Fino · Tsubaki · Eqqualberry · Chap-Stick · BOJ | تحقق من الأصالة &larr; &nbsp;&nbsp; 🌿 تبدأ البشرة الصحية من هنا. • مكونات ممتازة للعناية بشعرك وجسمك • موثوق بها من قبل خبراء التجميل • منتجات العافية والجمال المفضلة لديك تصلك مباشرة إلى باب منزلك • 🌿 تبدأ البشرة الصحية من هنا.
       </marquee>
     </div>
